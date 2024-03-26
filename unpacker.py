@@ -87,9 +87,14 @@ def extract_frames(json_file: str, png_file: str, output_dir: str) -> None:
     Returns:
         None
     """
+
+    if not os.path.exists(output_dir):
+        os.makedirs(output_dir)
+
+    print("Extracting frames from " + png_file + " using " + json_file)
     with open(json_file, 'r') as f:
         data = json.load(f)
-        sprite_sheet = Image.open(png_file)
+        sprite_sheet = Image.open(png_file).convert('RGBA')
 
         for frame_data in data["frames"]:
             filename = frame_data['filename']
@@ -126,6 +131,8 @@ def extract_frames(json_file: str, png_file: str, output_dir: str) -> None:
             # Save individual frame
             frame.save(output_dir + "/" + filename)
 
+    print("Extracted frames from " + png_file + " using " + json_file)
+
 def create_gif(input_dir: str, source_name: str, output_file: str, interval: int) -> None:
     """
     Creates a GIF file from a set of PNG images using the ImageMagick command line tool.
@@ -139,8 +146,10 @@ def create_gif(input_dir: str, source_name: str, output_file: str, interval: int
     Returns:
         None
     """
+    print("Creating GIF from " + input_dir + " using " + source_name + " with interval " + str(interval) + " tenths of a second: " + output_file)
     # HACK: Really didn't want to use magick here, but it's the only way I could get it to work
     subprocess.run(["magick", "-delay", str(interval / 10), "-loop", "0", "-dispose", "2", input_dir + "/[a-z_]*_[0-9][0-9][0-9][0-9].png", "-coalesce", output_file])
+    print("Created GIF from " + input_dir + " using " + source_name + " with interval " + str(interval) + " tenths of a second: " + output_file)
     pass
 
 def main():
@@ -169,17 +178,13 @@ def main():
     parser.add_argument("--create-gif", "-g", action="store_true", help="Create GIF", required=False)
     args = parser.parse_args()
 
-    print("Input file:", args.input)
-    print("Output directory:", args.output)
-    print("Keep JXR files:", args.keep_jxr)
-
     if not os.path.exists(args.output):
         os.makedirs(args.output)
 
     unpack_tpk(args.input, args.output, args.keep_jxr)
 
     if args.extract_frames:
-        extract_frames(args.output + "/" + path_to_filename_without_extension(args.input) + ".json", args.output + "/" + path_to_filename_without_extension(args.input) + ".png", args.output)
+        extract_frames(args.output + "/" + path_to_filename_without_extension(args.input) + ".json", args.output + "/" + path_to_filename_without_extension(args.input) + ".png", args.output + "/frames")
 
         if args.create_gif:
             with open(args.output + "/" + path_to_filename_without_extension(args.input) + ".interval" + ".txt", 'r') as file:
@@ -187,7 +192,7 @@ def main():
 
                 interval = int(intervalAsString)
 
-                create_gif(args.output, path_to_filename_without_extension(args.input) ,args.output + "/" + path_to_filename_without_extension(args.input) + ".gif", interval)
+                create_gif(args.output + "/frames", path_to_filename_without_extension(args.input), args.output + "/" + path_to_filename_without_extension(args.input) + ".gif", interval)
 
 if __name__ == "__main__":
     main()
