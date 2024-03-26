@@ -36,7 +36,7 @@ def convert_jxr_to_png(jxr_path: str, png_path: str) -> None:
     tempdir = tempfile.TemporaryDirectory()
     tiff_path = tempdir.name + "/" + path_to_filename_without_extension(jxr_path) + ".tif"
 
-    subprocess.run([".native/JXRDecApp", "-i", jxr_path, "-o", tiff_path])
+    subprocess.run([os.path.dirname(os.path.realpath(__file__)) + "/.native/JXRDecApp", "-i", jxr_path, "-o", tiff_path])
     subprocess.run(["magick", "convert", tiff_path, png_path])
     os.remove(tiff_path)
     tempdir.cleanup()
