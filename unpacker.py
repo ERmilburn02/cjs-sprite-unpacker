@@ -2,6 +2,7 @@
 
 from tpk.tpk.decoder import TPKDecoder
 from PIL import Image, ImageOps
+from termcolor import cprint
 
 import os
 import json
@@ -148,11 +149,11 @@ def create_gif(input_dir: str, source_name: str, output_file: str, interval: int
     """
 
     if not os.path.exists(input_dir):
-        print("Input directory does not exist: " + input_dir)
+        cprint("Input directory does not exist: " + input_dir, "yellow")
         return
     
     if len(os.listdir(input_dir)) < 2:
-        print("Input directory contains less than 2 files: " + input_dir)
+        cprint("Input directory contains less than 2 files: " + input_dir, "yellow")
         return
 
     print("Creating GIF from " + input_dir + " using " + source_name + " with interval " + str(interval) + " tenths of a second: " + output_file)
