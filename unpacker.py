@@ -146,6 +146,15 @@ def create_gif(input_dir: str, source_name: str, output_file: str, interval: int
     Returns:
         None
     """
+
+    if not os.path.exists(input_dir):
+        print("Input directory does not exist: " + input_dir)
+        return
+    
+    if len(os.listdir(input_dir)) < 2:
+        print("Input directory contains less than 2 files: " + input_dir)
+        return
+
     print("Creating GIF from " + input_dir + " using " + source_name + " with interval " + str(interval) + " tenths of a second: " + output_file)
     # HACK: Really didn't want to use magick here, but it's the only way I could get it to work
     subprocess.run(["magick", "-delay", str(interval / 10), "-loop", "0", "-dispose", "2", input_dir + "/[a-z_]*_[0-9][0-9][0-9][0-9].png", "-coalesce", output_file])
