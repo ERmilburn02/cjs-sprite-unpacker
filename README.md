@@ -22,5 +22,5 @@ Options are self-explaining.
 Code is under the MIT license
 The included JXRDecApp binary is under the BSD 2-Clause License
 
-## Help...
+## Help?
 no
