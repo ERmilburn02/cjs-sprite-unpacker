@@ -13,9 +13,14 @@ Unpacks the sprites from Card-Jitsu Snow's TPK files.
 
 ```
 unpacker.py [-h] [--output OUTPUT] [--keep-jxr] [--extract-frames] [--create-gif] input
-```
 
-Options are self-explaining.
+-h, --help            show this help message and exit
+--output OUTPUT       Specify output directory (defaults to 'output')
+--keep-jxr            Do not delete intermediate JXR files
+--extract-frames      Extract individual frames from animations
+--create-gif          Create animated GIFs from extracted frames (requires ImageMagick)
+input                 Path to the TPK file to unpack
+```
 
 ## License
 
